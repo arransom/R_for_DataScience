@@ -186,3 +186,106 @@ ggplot(data = mpg) +
 
 
 
+# 3.6 Geometric Objects ############################################################  
+
+# What geom would you use to draw...
+# A line chart?    Answer = geom_line
+# A boxplot?       Answer = geom_boxplot
+# A histogram?     Answer = geom_bar or geom_histogram
+# An area chart?   Answer = geom_area
+  
+# Run this code in your head and predict what the output will look like. 
+# Then, run the code in R and check your predictions.
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+
+# Answer: The output will be a scatterplot using the dataset mpg. 
+#         The variable'displ' will be mapped to the x-axis, and the variable
+#         'hwy' will be mapped to the y-axis.  Each value of the variable 'drv'
+#         will be displayed in a different color. 
+#         Trendlines will be mapped to the displ and hwy values for each
+#         category of drv
+
+#What does show.legend = FALSE do? What happens if you remove it?
+ggplot(data = mpg) +
+  geom_smooth(
+    mapping = aes(x = displ, y = hwy, color = drv),
+    show.legend = FALSE
+  )
+
+ggplot(data = mpg) +
+  geom_smooth(
+    mapping = aes(x = displ, y = hwy, color = drv),
+  )
+
+# Answer: It removes the legend from the plot.  If you remove it, the legend
+#         will be displayed in the plot.
+
+# Why do you think I used it earlier in the chapter?
+# Answer: To highlight the fact that if you allow ggplot to automatically group
+#         the data when you map an aesthetic to a discrete variable; whereas the 
+#         "group()" aesthetic does not. 
+
+# What does the se argument to geom_smooth() do?
+# Answer: It displays the standard error of the line that geom_smooth() has 
+#         mapped to your data.
+
+#  Will these two graphs look different? Why/why not?
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth()
+
+ggplot() + 
+  geom_point(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_smooth(data = mpg, mapping = aes(x = displ, y = hwy))
+
+# Answer: No, they will be identical. If you pass the mappings to ggplot, 
+#         they will be applied globally.  If you pass them to the individual 
+#         geoms, they will be applied locally. 
+
+# Recreate the R code necessary to generate the following graphs.(see book)
+
+# Plot 1
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(size = 3) + 
+  geom_smooth(size = 1.5, se = FALSE) 
+  
+# Plot 2
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, group = drv),
+              size = 1.5, 
+              se = FALSE) +
+  geom_point(mapping = aes(x = displ, y = hwy),
+             size = 3) 
+  
+# Plot 3
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
+  geom_point(size = 3) + 
+  geom_smooth(size = 1.5, se = FALSE) 
+
+# Plot 4
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = drv),
+             size = 3) +
+  geom_smooth(mapping = aes(x = displ, y = hwy),
+              size = 1.5, 
+              se = FALSE) 
+
+# Plot 5
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = drv),
+             size = 3) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv),
+              size = 1.5, 
+              se = FALSE) 
+
+# Plot 6
+ggplot(data = mpg) +
+  geom_point(aes(x = displ, y = hwy, fill = drv),
+             shape = 21, 
+             size = 3, 
+             color = "white", 
+             stroke = 3
+             ) 
+             
