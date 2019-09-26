@@ -78,3 +78,25 @@ FALSE & NA
 #         result no matter what the missing value may be, it will not evaluate
 #         to NA.
 
+
+
+# 5.3 Arrange Rows with arrange() ----------------------------------------------
+
+# How could you use arrange() to sort all missing values to the start? 
+# (Hint: use is.na()).
+arrange(flights, desc(is.na(dep_time)))
+
+# Sort flights to find the most delayed flights. 
+arrange(flights, desc(dep_delay))
+
+# Find the flights that left earliest.
+arrange(flights, dep_delay)
+
+# Sort flights to find the fastest flights.
+# Note: I am assuming that this means the shortest air time, not the fastest 
+#       flight speed
+arrange(flights, air_time)
+
+# Which flights travelled the longest? Which travelled the shortest?
+arrange(flights, desc(distance))
+arrange(flights, distance)
