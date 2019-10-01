@@ -4,7 +4,6 @@
 
 # Load Packages ----------------------------------------------------------------
 
-install.packages("nycflights13")
 library(nycflights13)
 library(tidyverse)
 
@@ -100,3 +99,63 @@ arrange(flights, air_time)
 # Which flights travelled the longest? Which travelled the shortest?
 arrange(flights, desc(distance))
 arrange(flights, distance)
+
+# 5.4 Select columns with select() ---------------------------------------------
+
+# Brainstorm as many ways as possible to select dep_time, dep_delay, arr_time, 
+# and arr_delay from flights.
+
+flights %>% select("dep_time", "dep_delay", "arr_time", "arr_delay")
+flights %>% select(4,6,7,9)
+
+flights %>% select("dep_time", "dep_delay":"arr_time", "arr_delay")
+flights %>% select(4,6:7,9)
+
+flights %>% select(4:9, -5, -8)
+flights %>% select("dep_time":"arr_delay", -"sched_dep_time", -"sched_arr_time")
+
+flights %>% select(4:9, -c(5, 8))
+flights %>% select("dep_time":"arr_delay", -c("sched_dep_time", "sched_arr_time"))
+
+flights %>% select("dep_time":"arr_delay", -contains("sched"))
+flights %>% select(contains("dep"), contains("arr"), -contains("sched"))
+
+flights %>% select(starts_with("dep"), starts_with("arr"))
+flights %>% select(ends_with("time"), ends_with("delay"), 
+                   -contains("sched"), -contains("air"))
+
+flights %>% select(everything(), -c(1:3, 5,8, 10:19))
+flights %>% select((1:last_col()), -c(1:3, 5,8, 10:last_col()))
+
+# What happens if you include the name of a variable multiple times in a 
+# select() call?
+  
+flights %>% select(dep_time, dep_time, dep_delay)
+# Answer: The column will only be included once in the returned dataframe
+
+# What does the one_of() function do? 
+# Answer: The one_of() function is a helper function to the tidyverse' select()
+#         function.  It matches variable names in a character vector
+
+# Why might it be helpful in conjunction with this vector?
+vars <- c("year", "month", "day", "dep", "arr_delay")
+
+# Answer: You can create a vector to store the names of variables that you 
+#         would like to call, and then call the vector using the one_of() 
+#         function in conjunction with the select_function.  This will be 
+#         especially useful if you expect to need to call the same set of
+#         variables regularly. 
+#         See example below:
+flights %>% select(one_of(vars))
+
+# Does the result of running the following code surprise you? 
+select(flights, contains("TIME"))
+# Answer: Yes.  R is usually case sensitive.
+
+# How do the select helpers deal with case by default? 
+# Answer:  By default, the select helpers will ignore case. 
+
+# How can you change that default?
+# You can tell the select helpers not to ignore case by using the argument
+# ignore.case = FALSE
+
