@@ -159,3 +159,67 @@ select(flights, contains("TIME"))
 # You can tell the select helpers not to ignore case by using the argument
 # ignore.case = FALSE
 
+
+# 5.5 Add new variables with Mutate() ------------------------------------------
+
+# Currently dep_time and sched_dep_time are convenient to look at, but hard to 
+# compute with because they’re not really continuous numbers. 
+# Convert them to a more convenient representation of number of minutes since 
+# midnight.
+
+flight_times<-flights %>%
+  mutate(dep_hour = dep_time %/% 100,
+         dep_minute = dep_time %% 100,
+         dep_mins_past_midnight = dep_hour * 60 + dep_minute,
+         sched_dep_hour = sched_dep_time %/% 100,
+         sched_dep_minute = sched_dep_time %% 100,
+         sched_dep_mins_past_midnight = sched_dep_hour * 60 + sched_dep_minute) %>%
+  select(-c(dep_hour, dep_minute, sched_dep_hour, sched_dep_minute))
+
+
+# Compare air_time with arr_time - dep_time. 
+flight_compare <- flights %>%
+  mutate(wrong_calc = arr_time - dep_time) %>%
+  select(air_time, wrong_calc, arr_time, dep_time) %>%
+  print(nrows=Inf)
+
+# What do you expect to see? What do you see? What do you need to do to fix it?
+# Answer: I expect that air_time and the result of arr_time - dep_time will
+#         be different. My expectation was correct: arr_time and dep_time were
+#         treated as integers because of the way they were stored (as objects of 
+#         class: "integer" not class "datetime"). To fix it, I could either
+#         create new variables representing arr_time and dep_time as the number
+#         of minutes past midnight, or convert them to class: "datetime" 
+
+
+# Compare dep_time, sched_dep_time, and dep_delay. 
+# How would you expect those three numbers to be related?
+  
+# Answer: As with the question above, I would not expect to be able to 
+#         accurately calculate dep_delay from dep_time and sched_dep_time 
+#         without first converting dep_time and sched_dep_time to new variables
+#         representing the number of minutes past midnight, or objects of the
+#         class "datetime."  Without these changes, I would only expect the
+#         calculation to output accurate results when the dep_time and 
+#         sched_dep_time are within the same hour
+
+# Find the 10 most delayed flights using a ranking function. How do you want to 
+# handle ties? Carefully read the documentation for min_rank().
+flight_delays<-flights %>%
+  mutate(most_delayed = min_rank(desc(dep_delay))) %>%
+  arrange(most_delayed) %>%
+  head(10)
+
+
+# What does 1:3 + 1:10 return? Why?
+1:3 + 1:10
+# Answer:  The code returns a vecter with the following values:
+#          Vector: 2  4  6  5  7  9  8 10 12 11
+#          This vectorized funtion uses 'recycling' rules, repeating the values 
+#          in the shorter vector until it matches the length of the longer 
+#          vector
+#          
+
+# What trigonometric functions does R provide?
+# Answer: R provides the following trigonometric functions: cos(), sin(), tan(), 
+# acos(), asin(), atan(), atan2(), cospi(), sinpi(), tanpi() 
